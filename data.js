@@ -9,7 +9,7 @@ const VOCABULARY = {
   //  Nombres
   // ──────────────────────────────────────────────────
   "Nombres": {
-    icon: "",
+    icon: "🔢",
     words: [
       { geo: "ერთი", ph: "Erti", fr: "Un", audio: "ერთი.mp3" },
       { geo: "ორი", ph: "Ori", fr: "Deux", audio: "ორი.mp3" },
@@ -28,7 +28,7 @@ const VOCABULARY = {
   //  La Famille & Les Proches
   // ──────────────────────────────────────────────────
   "La Famille & Les Proches": {
-    icon: "📌",
+    icon: "👨‍👩‍👧‍👦",
     words: [
       { geo: "დედა", ph: "Deda", fr: "Maman / Mère", audio: "დედა.mp3" },
       { geo: "მამა", ph: "Mama", fr: "Papa / Père", audio: "მამა.mp3" },
