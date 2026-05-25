@@ -41,6 +41,30 @@ const VOCABULARY = {
       { geo: "შვილი", ph: "Shvili", fr: "Enfant (Fils / Fille)", audio: "შვილი.mp3" },
       { geo: "მეგობარი", ph: "Megobari", fr: "Ami(e)", audio: "მეგობარი.mp3" },
     ]
+  },
+
+  // ──────────────────────────────────────────────────
+  //  Les Parties du Corps
+  // ──────────────────────────────────────────────────
+  "Les Parties du Corps": {
+    icon: "🦵",
+    words: [
+      { geo: "ხელი", ph: "xeli", fr: "Main / Bras", audio: "ხელი.mp3" },
+      { geo: "ფეხი", ph: "fexi", fr: "Pied / Jambe", audio: "ფეხი.mp3" },
+      { geo: "თავი", ph: "Tavi", fr: "Tête", audio: "თავი.mp3" },
+      { geo: "თმა", ph: "Tma", fr: "Cheveux", audio: "თმა.mp3" },
+      { geo: "მუცელი", ph: "Muceli", fr: "Ventre", audio: "მუცელი.mp3" },
+      { geo: "ზურგი", ph: "Zurgi", fr: "Dos", audio: "ზურგი.mp3" },
+      { geo: "თვალი", ph: "Tvali", fr: "Œil", audio: "თვალი.mp3" },
+      { geo: "ძვალი", ph: "Dzvali", fr: "Os", audio: "ძვალი.mp3" },
+      { geo: "მხარი", ph: "Mxari", fr: "Épaule", audio: "მხარი.mp3" },
+      { geo: "გული", ph: "Guli", fr: "Cœur", audio: "გული.mp3" },
+      { geo: "ტუჩი", ph: "Tuchi", fr: "Lèvre", audio: "ტუჩი.mp3" },
+      { geo: "კბილი", ph: "Kbili", fr: "Dent", audio: "კბილი.mp3" },
+      { geo: "ცხვირი", ph: "Cxviri", fr: "Nez", audio: "ცხვირი.mp3" },
+      { geo: "მუხლი", ph: "Muxli", fr: "Genou", audio: "მუხლი.mp3" },
+      { geo: "ფრჩხილი", ph: "Frchxili", fr: "Ongle", audio: "ფრჩხილი.mp3" },
+    ]
   }
 
 };
