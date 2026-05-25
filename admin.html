@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — Gestion du Vocabulaire</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1a1a2e; --cream: #faf8f3; --gold: #c9a84c;
+      --rust: #c0392b; --sage: #2d6a4f; --mist: #e8e4dc;
+      --red: #e74c3c; --blue: #2980b9;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: #f0ede6; color: var(--ink); min-height: 100vh; }
+
+    /* ── TOP BAR ── */
+    .topbar {
+      background: var(--ink); color: var(--cream);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 28px; height: 58px; position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 2px 12px rgba(0,0,0,.2);
+    }
+    .topbar-left { display: flex; align-items: center; gap: 14px; }
+    .topbar h1 { font-family: 'Playfair Display', serif; font-size: 18px; }
+    .topbar h1 em { color: var(--gold); font-style: italic; }
+    .topbar-badge { font-size: 10px; background: rgba(201,168,76,.2); color: var(--gold); padding: 3px 10px; border-radius: 20px; letter-spacing: 1px; }
+    .topbar-right { display: flex; gap: 10px; align-items: center; }
+    .btn-preview {
+      text-decoration: none; font-size: 13px; color: rgba(250,248,243,.6);
+      border: 1px solid rgba(250,248,243,.2); padding: 7px 16px; border-radius: 8px;
+      transition: color .2s, border-color .2s;
+    }
+    .btn-preview:hover { color: var(--gold); border-color: var(--gold); }
+    .btn-export {
+      font-size: 13px; font-family: 'DM Sans', sans-serif; font-weight: 500;
+      background: var(--gold); color: var(--ink); border: none; cursor: pointer;
+      padding: 8px 18px; border-radius: 8px; transition: opacity .2s;
+    }
+    .btn-export:hover { opacity: .85; }
+
+    /* ── LAYOUT ── */
+    .layout { display: grid; grid-template-columns: 280px 1fr; min-height: calc(100vh - 58px); }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      background: white; border-right: 1px solid var(--mist);
+      padding: 24px 16px; display: flex; flex-direction: column; gap: 6px;
+    }
+    .sidebar-title { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: #aaa; padding: 0 10px; margin-bottom: 6px; }
+    .sec-btn {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: 10px; cursor: pointer;
+      transition: background .15s; border: none; background: transparent;
+      width: 100%; text-align: left; font-family: 'DM Sans', sans-serif;
+    }
+    .sec-btn:hover { background: var(--cream); }
+    .sec-btn.active { background: var(--ink); color: var(--cream); }
+    .sec-btn .sec-icon { font-size: 16px; }
+    .sec-btn .sec-name { font-size: 14px; font-weight: 500; flex: 1; }
+    .sec-btn .sec-count { font-size: 11px; opacity: .5; }
+    .sidebar-add-sec {
+      margin-top: 12px; padding: 10px 12px;
+      border: 1.5px dashed var(--mist); border-radius: 10px;
+      text-align: center; font-size: 13px; color: #aaa;
+      cursor: pointer; transition: border-color .2s, color .2s;
+    }
+    .sidebar-add-sec:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* ── MAIN PANEL ── */
+    .main { padding: 30px 32px; overflow-y: auto; }
+
+    .panel-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 28px; }
+    .panel-header h2 { font-family: 'Playfair Display', serif; font-size: 24px; }
+    .panel-header p { font-size: 13px; color: #999; margin-top: 4px; }
+    .btn-add-word {
+      display: flex; align-items: center; gap: 7px;
+      background: var(--ink); color: var(--cream);
+      border: none; border-radius: 10px; padding: 11px 20px;
+      font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500;
+      cursor: pointer; transition: opacity .2s; white-space: nowrap;
+    }
+    .btn-add-word:hover { opacity: .85; }
+
+    /* ── WORD TABLE ── */
+    .word-list { display: flex; flex-direction: column; gap: 10px; }
+    .word-row {
+      background: white; border-radius: 12px; padding: 16px 18px;
+      border: 1.5px solid var(--mist); display: grid;
+      grid-template-columns: 1fr 1fr 1fr 160px 80px;
+      gap: 12px; align-items: center;
+      transition: border-color .2s;
+    }
+    .word-row:hover { border-color: #ccc; }
+    .col-label { font-size: 9px; text-transform: uppercase; letter-spacing: 1.5px; color: #bbb; margin-bottom: 4px; }
+    .editable {
+      font-size: 14px; border: none; background: transparent; outline: none;
+      font-family: 'DM Sans', sans-serif; color: var(--ink); width: 100%;
+      padding: 4px 0; border-bottom: 1px solid transparent; transition: border-color .2s;
+    }
+    .editable:focus { border-bottom-color: var(--gold); }
+    .editable.geo { font-family: 'Playfair Display', serif; font-size: 16px; }
+    .editable.ph  { color: var(--rust); font-style: italic; }
+
+    /* audio col */
+    .audio-col { display: flex; flex-direction: column; gap: 5px; }
+    .audio-filename { font-size: 12px; color: #888; font-style: italic; min-height: 17px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .audio-controls { display: flex; gap: 6px; }
+    .btn-upload {
+      font-size: 11px; padding: 5px 10px; border-radius: 7px;
+      border: 1px solid var(--mist); background: var(--cream);
+      cursor: pointer; transition: border-color .2s; font-family: 'DM Sans', sans-serif;
+    }
+    .btn-upload:hover { border-color: var(--gold); color: var(--gold); }
+    .btn-play-mini {
+      width: 28px; height: 28px; border-radius: 50%;
+      border: 1px solid var(--mist); background: var(--cream);
+      cursor: pointer; font-size: 11px; display: flex; align-items: center; justify-content: center;
+      transition: background .2s;
+    }
+    .btn-play-mini:hover { background: var(--sage); color: white; border-color: var(--sage); }
+    .btn-play-mini.tts { color: var(--rust); }
+
+    /* row actions */
+    .row-actions { display: flex; gap: 7px; justify-content: flex-end; }
+    .btn-icon {
+      width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--mist);
+      background: transparent; cursor: pointer; font-size: 14px;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .2s, border-color .2s;
+    }
+    .btn-icon.del:hover { background: #fde8e8; border-color: var(--red); color: var(--red); }
+    .btn-icon.move:hover { background: var(--cream); }
+
+    /* table header */
+    .word-list-header {
+      display: grid; grid-template-columns: 1fr 1fr 1fr 160px 80px;
+      gap: 12px; padding: 0 18px; margin-bottom: 6px;
+    }
+    .word-list-header span { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #bbb; }
+
+    /* ── ADD WORD MODAL ── */
+    .modal-bg {
+      display: none; position: fixed; inset: 0;
+      background: rgba(26,26,46,.5); backdrop-filter: blur(4px);
+      z-index: 200; align-items: center; justify-content: center;
+    }
+    .modal-bg.open { display: flex; }
+    .modal {
+      background: white; border-radius: 18px; padding: 32px;
+      width: 100%; max-width: 500px; box-shadow: 0 24px 60px rgba(0,0,0,.2);
+      animation: popIn .25s ease;
+    }
+    @keyframes popIn { from { transform: scale(.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .modal h3 { font-family: 'Playfair Display', serif; font-size: 20px; margin-bottom: 22px; }
+    .form-field { margin-bottom: 18px; }
+    .form-field label { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #aaa; margin-bottom: 7px; }
+    .form-field input {
+      width: 100%; padding: 12px 14px; border: 1.5px solid var(--mist);
+      border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 15px;
+      color: var(--ink); outline: none; transition: border-color .2s;
+    }
+    .form-field input:focus { border-color: var(--gold); }
+    .form-field input.geo-input { font-family: 'Playfair Display', serif; font-size: 18px; }
+    .form-field input.ph-input { color: var(--rust); font-style: italic; }
+    .audio-upload-area {
+      border: 2px dashed var(--mist); border-radius: 10px;
+      padding: 18px; text-align: center; cursor: pointer; transition: border-color .2s;
+    }
+    .audio-upload-area:hover { border-color: var(--gold); }
+    .audio-upload-area input { display: none; }
+    .audio-upload-area p { font-size: 13px; color: #aaa; margin-top: 5px; }
+    .audio-upload-area strong { font-size: 14px; }
+    .audio-preview { font-size: 12px; color: var(--sage); margin-top: 8px; display: none; }
+    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 24px; }
+    .btn-cancel { padding: 10px 20px; border: 1.5px solid var(--mist); border-radius: 10px; background: transparent; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 14px; }
+    .btn-save { padding: 10px 24px; background: var(--ink); color: white; border: none; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: opacity .2s; }
+    .btn-save:hover { opacity: .85; }
+
+    /* ── EXPORT PANEL ── */
+    .export-box {
+      background: var(--ink); color: var(--cream); border-radius: 14px;
+      padding: 22px 26px; margin-bottom: 28px; display: none;
+    }
+    .export-box.open { display: block; }
+    .export-box h4 { font-family: 'Playfair Display', serif; font-size: 16px; color: var(--gold); margin-bottom: 10px; }
+    .export-box p { font-size: 13px; color: rgba(250,248,243,.6); margin-bottom: 14px; line-height: 1.6; }
+    .export-box textarea {
+      width: 100%; height: 200px; background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.15); border-radius: 8px;
+      color: #7fde9a; font-family: 'Courier New', monospace; font-size: 12px;
+      padding: 12px; resize: vertical; outline: none;
+    }
+    .export-actions { display: flex; gap: 10px; margin-top: 12px; }
+    .btn-copy-code {
+      padding: 9px 18px; background: var(--gold); color: var(--ink);
+      border: none; border-radius: 8px; font-family: 'DM Sans', sans-serif;
+      font-size: 13px; font-weight: 500; cursor: pointer; transition: opacity .2s;
+    }
+    .btn-copy-code:hover { opacity: .85; }
+    .btn-dl {
+      padding: 9px 18px; background: rgba(255,255,255,.1); color: var(--cream);
+      border: none; border-radius: 8px; font-family: 'DM Sans', sans-serif;
+      font-size: 13px; cursor: pointer; transition: background .2s;
+    }
+    .btn-dl:hover { background: rgba(255,255,255,.2); }
+
+    .empty-state { text-align: center; padding: 48px; color: #ccc; }
+    .empty-state span { font-size: 40px; display: block; margin-bottom: 12px; }
+
+    @media(max-width:900px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { flex-direction: row; flex-wrap: wrap; border-right: none; border-bottom: 1px solid var(--mist); padding: 16px; }
+      .word-row, .word-list-header { grid-template-columns: 1fr 1fr; }
+      .word-list-header span:nth-child(n+3) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-left">
+    <h1>⚙ Admin — <em>Vocabulaire Géorgien</em></h1>
+    <span class="topbar-badge">ÉDITEUR</span>
+  </div>
+  <div class="topbar-right">
+    <a href="index.html" class="btn-preview">👁 Voir le site</a>
+    <button class="btn-export" onclick="toggleExport()">⬇ Exporter data.js</button>
+  </div>
+</div>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-title">Sections</div>
+    <!-- populated by JS -->
+    <div class="sidebar-add-sec" onclick="addSection()">+ Nouvelle section</div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main" id="main">
+
+    <!-- Export box -->
+    <div class="export-box" id="exportBox">
+      <h4>📋 Nouveau contenu de data.js</h4>
+      <p>Copiez ce code et remplacez le contenu de votre fichier <code>data.js</code> pour sauvegarder vos modifications.</p>
+      <textarea id="exportCode" readonly></textarea>
+      <div class="export-actions">
+        <button class="btn-copy-code" onclick="copyCode()">📋 Copier</button>
+        <button class="btn-dl" onclick="downloadDataJs()">⬇ Télécharger data.js</button>
+      </div>
+    </div>
+
+    <div class="panel-header" id="panelHeader">
+      <div>
+        <h2 id="panelTitle">Sélectionnez une section</h2>
+        <p id="panelSub">Choisissez une section dans le panneau de gauche</p>
+      </div>
+    </div>
+
+    <div class="word-list-header" id="wordListHeader" style="display:none">
+      <span>Géorgien</span><span>Phonétique (FR)</span><span>Traduction</span><span>Fichier audio</span><span></span>
+    </div>
+    <div class="word-list" id="wordList"></div>
+
+  </div>
+</div>
+
+<!-- ADD WORD MODAL -->
+<div class="modal-bg" id="modal">
+  <div class="modal">
+    <h3 id="modalTitle">Ajouter un mot</h3>
+    <div class="form-field">
+      <label>Géorgien (script mkhedruli)</label>
+      <input class="geo-input" id="f_geo" type="text" placeholder="ex. გამარჯობა">
+    </div>
+    <div class="form-field">
+      <label>Phonétique (lecture à la française)</label>
+      <input class="ph-input" id="f_ph" type="text" placeholder="ex. Gamarjoba">
+    </div>
+    <div class="form-field">
+      <label>Traduction française</label>
+      <input id="f_fr" type="text" placeholder="ex. Bonjour">
+    </div>
+    <div class="form-field">
+      <label>Fichier audio (optionnel)</label>
+      <div class="audio-upload-area" onclick="document.getElementById('f_audio_file').click()">
+        <input type="file" id="f_audio_file" accept="audio/*" onchange="handleAudioSelect(this)">
+        <strong>🎵 Cliquez pour choisir un fichier</strong>
+        <p>MP3, OGG, WAV — placez le fichier dans /audio/</p>
+      </div>
+      <div class="audio-preview" id="audioPreview"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Annuler</button>
+      <button class="btn-save" onclick="saveWord()">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script>
+// Working copy of data
+let vocab = JSON.parse(JSON.stringify(VOCABULARY));
+let currentSection = null;
+let editingIndex = -1;
+let pendingAudioName = '';
+
+// ── SIDEBAR ──
+function renderSidebar() {
+  const sb = document.getElementById('sidebar');
+  // clear existing buttons (keep add-sec button)
+  sb.querySelectorAll('.sec-btn').forEach(b => b.remove());
+  const addBtn = sb.querySelector('.sidebar-add-sec');
+  for (const [title, sec] of Object.entries(vocab)) {
+    const btn = document.createElement('button');
+    btn.className = 'sec-btn' + (title === currentSection ? ' active' : '');
+    btn.innerHTML = `<span class="sec-icon">${sec.icon}</span><span class="sec-name">${title}</span><span class="sec-count">${sec.words.length}</span>`;
+    btn.onclick = () => { currentSection = title; renderSidebar(); renderMain(); };
+    sb.insertBefore(btn, addBtn);
+  }
+}
+
+// ── MAIN PANEL ──
+function renderMain() {
+  const header = document.getElementById('panelHeader');
+  const list   = document.getElementById('wordList');
+  const hdr    = document.getElementById('wordListHeader');
+
+  if (!currentSection || !vocab[currentSection]) {
+    document.getElementById('panelTitle').textContent = 'Sélectionnez une section';
+    document.getElementById('panelSub').textContent   = 'Choisissez une section dans le panneau de gauche';
+    hdr.style.display = 'none';
+    list.innerHTML = '';
+    return;
+  }
+
+  const sec = vocab[currentSection];
+  document.getElementById('panelTitle').textContent = sec.icon + '  ' + currentSection;
+  document.getElementById('panelSub').textContent   = sec.words.length + ' mot' + (sec.words.length > 1 ? 's' : '');
+  hdr.style.display = '';
+
+  // Add word button in header
+  let addWrap = document.getElementById('addWordBtn');
+  if (!addWrap) {
+    addWrap = document.createElement('button');
+    addWrap.id = 'addWordBtn';
+    addWrap.className = 'btn-add-word';
+    addWrap.innerHTML = '＋ Ajouter un mot';
+    addWrap.onclick = () => openModal();
+    header.appendChild(addWrap);
+  }
+
+  list.innerHTML = '';
+  if (!sec.words.length) {
+    list.innerHTML = '<div class="empty-state"><span>📭</span>Aucun mot. Ajoutez-en un !</div>';
+    return;
+  }
+  sec.words.forEach((w, i) => list.appendChild(makeRow(w, i)));
+}
+
+function makeRow(w, i) {
+  const row = document.createElement('div');
+  row.className = 'word-row';
+  row.innerHTML = `
+    <div>
+      <div class="col-label">Géorgien</div>
+      <input class="editable geo" value="${escHtml(w.geo)}" oninput="updateField(${i},'geo',this.value)">
+    </div>
+    <div>
+      <div class="col-label">Phonétique</div>
+      <input class="editable ph" value="${escHtml(w.ph)}" oninput="updateField(${i},'ph',this.value)">
+    </div>
+    <div>
+      <div class="col-label">Traduction</div>
+      <input class="editable" value="${escHtml(w.fr)}" oninput="updateField(${i},'fr',this.value)">
+    </div>
+    <div class="audio-col">
+      <div class="col-label">Audio</div>
+      <div class="audio-filename">${w.audio || '<em style="color:#ccc">aucun fichier</em>'}</div>
+      <div class="audio-controls">
+        <button class="btn-upload" onclick="openAudioPicker(${i})">📁 Fichier</button>
+        <button class="btn-play-mini tts" title="Synthèse vocale" onclick="ttsPlay('${escHtml(w.geo).replace(/'/g,"\\'")}')">🔊</button>
+        <input type="file" id="ap_${i}" accept="audio/*" style="display:none" onchange="setAudio(${i},this)">
+      </div>
+    </div>
+    <div class="row-actions">
+      <button class="btn-icon move" title="Monter" onclick="moveWord(${i},-1)">↑</button>
+      <button class="btn-icon move" title="Descendre" onclick="moveWord(${i},1)">↓</button>
+      <button class="btn-icon del" title="Supprimer" onclick="deleteWord(${i})">🗑</button>
+    </div>`;
+  return row;
+}
+
+function escHtml(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function updateField(i, field, val) {
+  vocab[currentSection].words[i][field] = val;
+  renderSidebar();
+}
+
+function openAudioPicker(i) { document.getElementById('ap_' + i).click(); }
+function setAudio(i, input) {
+  if (!input.files.length) return;
+  const name = input.files[0].name;
+  vocab[currentSection].words[i].audio = name;
+  renderMain();
+}
+
+function moveWord(i, dir) {
+  const words = vocab[currentSection].words;
+  const ni = i + dir;
+  if (ni < 0 || ni >= words.length) return;
+  [words[i], words[ni]] = [words[ni], words[i]];
+  renderMain();
+}
+
+function deleteWord(i) {
+  if (!confirm('Supprimer ce mot ?')) return;
+  vocab[currentSection].words.splice(i, 1);
+  renderSidebar(); renderMain();
+}
+
+// ── ADD WORD MODAL ──
+function openModal(idx = -1) {
+  editingIndex = idx;
+  pendingAudioName = '';
+  document.getElementById('audioPreview').style.display = 'none';
+  document.getElementById('f_audio_file').value = '';
+  if (idx >= 0) {
+    const w = vocab[currentSection].words[idx];
+    document.getElementById('modalTitle').textContent = 'Modifier le mot';
+    document.getElementById('f_geo').value = w.geo;
+    document.getElementById('f_ph').value  = w.ph;
+    document.getElementById('f_fr').value  = w.fr;
+    pendingAudioName = w.audio || '';
+    if (pendingAudioName) {
+      const ap = document.getElementById('audioPreview');
+      ap.textContent = '✅ ' + pendingAudioName; ap.style.display = 'block';
+    }
+  } else {
+    document.getElementById('modalTitle').textContent = 'Ajouter un mot';
+    document.getElementById('f_geo').value = '';
+    document.getElementById('f_ph').value  = '';
+    document.getElementById('f_fr').value  = '';
+  }
+  document.getElementById('modal').classList.add('open');
+  setTimeout(() => document.getElementById('f_geo').focus(), 100);
+}
+
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+
+function handleAudioSelect(input) {
+  if (!input.files.length) return;
+  pendingAudioName = input.files[0].name;
+  const ap = document.getElementById('audioPreview');
+  ap.textContent = '✅ ' + pendingAudioName;
+  ap.style.display = 'block';
+}
+
+function saveWord() {
+  const geo = document.getElementById('f_geo').value.trim();
+  const ph  = document.getElementById('f_ph').value.trim();
+  const fr  = document.getElementById('f_fr').value.trim();
+  if (!geo || !fr) { alert('Le mot géorgien et la traduction sont obligatoires.'); return; }
+  const word = { geo, ph, fr, audio: pendingAudioName };
+  if (editingIndex >= 0) {
+    vocab[currentSection].words[editingIndex] = word;
+  } else {
+    vocab[currentSection].words.push(word);
+  }
+  closeModal(); renderSidebar(); renderMain();
+}
+
+// Close modal on background click
+document.getElementById('modal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// ── ADD SECTION ──
+function addSection() {
+  const name = prompt('Nom de la nouvelle section :');
+  if (!name || !name.trim()) return;
+  const icon = prompt('Emoji pour l\'icône (ex. 🏠) :', '📌') || '📌';
+  vocab[name.trim()] = { icon: icon.trim(), words: [] };
+  currentSection = name.trim();
+  renderSidebar(); renderMain();
+}
+
+// ── TTS ──
+function ttsPlay(text) {
+  if (!window.speechSynthesis) return;
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'ka-GE'; u.rate = 0.85;
+  speechSynthesis.cancel(); speechSynthesis.speak(u);
+}
+
+// ── EXPORT ──
+function toggleExport() {
+  const box = document.getElementById('exportBox');
+  box.classList.toggle('open');
+  if (box.classList.contains('open')) generateExport();
+}
+
+function generateExport() {
+  const lines = [];
+  lines.push(`// ═══════════════════════════════════════════════════════════════`);
+  lines.push(`//  data.js — Dictionnaire Géorgien / Français`);
+  lines.push(`//  Généré automatiquement depuis l'interface admin`);
+  lines.push(`// ═══════════════════════════════════════════════════════════════`);
+  lines.push('');
+  lines.push('const VOCABULARY = {');
+  lines.push('');
+
+  const entries = Object.entries(vocab);
+  entries.forEach(([title, sec], si) => {
+    lines.push(`  // ${'─'.repeat(50)}`);
+    lines.push(`  //  ${title}`);
+    lines.push(`  // ${'─'.repeat(50)}`);
+    lines.push(`  ${JSON.stringify(title)}: {`);
+    lines.push(`    icon: ${JSON.stringify(sec.icon)},`);
+    lines.push(`    words: [`);
+    sec.words.forEach(w => {
+      lines.push(`      { geo: ${JSON.stringify(w.geo)}, ph: ${JSON.stringify(w.ph)}, fr: ${JSON.stringify(w.fr)}, audio: ${JSON.stringify(w.audio||'')} },`);
+    });
+    lines.push(`    ]`);
+    lines.push(`  }` + (si < entries.length - 1 ? ',' : ''));
+    lines.push('');
+  });
+  lines.push('};');
+
+  document.getElementById('exportCode').value = lines.join('\n');
+}
+
+function copyCode() {
+  const ta = document.getElementById('exportCode');
+  ta.select();
+  document.execCommand('copy');
+  const btn = event.target;
+  btn.textContent = '✅ Copié !';
+  setTimeout(() => btn.textContent = '📋 Copier', 2000);
+}
+
+function downloadDataJs() {
+  const code = document.getElementById('exportCode').value;
+  const blob = new Blob([code], { type: 'text/javascript' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'data.js';
+  a.click();
+}
+
+// ── INIT ──
+renderSidebar();
+// auto-select first section
+const first = Object.keys(vocab)[0];
+if (first) { currentSection = first; renderSidebar(); renderMain(); }
+</script>
+</body>
+</html>
