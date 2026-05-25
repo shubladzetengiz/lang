@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vocabulaire Géorgien</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1a1a2e; --cream: #faf8f3; --gold: #c9a84c;
+      --rust: #c0392b; --sage: #2d6a4f; --mist: #e8e4dc;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--ink); }
+
+    .hero {
+      background: var(--ink); color: var(--cream);
+      padding: 56px 32px 44px; text-align: center; position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 60% 50% at 20% 50%, rgba(201,168,76,.13) 0%, transparent 70%),
+                  radial-gradient(ellipse 50% 60% at 80% 50%, rgba(192,57,43,.11) 0%, transparent 70%);
+    }
+    .hero-badges { display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 22px; }
+    .badge-flag { font-size: 28px; }
+    .badge-arrow { color: var(--gold); font-size: 20px; }
+    .hero-eyebrow { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; }
+    .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(26px,5vw,42px); line-height: 1.2; }
+    .hero h1 em { font-style: italic; color: var(--gold); }
+    .hero-sub { margin-top: 12px; font-size: 14px; font-weight: 300; color: rgba(250,248,243,.6); }
+    .hero-admin-link {
+      position: absolute; top: 18px; right: 20px;
+      font-size: 11px; color: rgba(250,248,243,.35); text-decoration: none;
+      border: 1px solid rgba(250,248,243,.15); padding: 5px 12px; border-radius: 20px;
+      transition: color .2s, border-color .2s;
+    }
+    .hero-admin-link:hover { color: var(--gold); border-color: var(--gold); }
+
+    .container { max-width: 900px; margin: 0 auto; padding: 36px 20px 60px; }
+
+    .search-wrap { position: relative; margin-bottom: 36px; }
+    .search-wrap input {
+      width: 100%; padding: 15px 18px 15px 48px;
+      border: 2px solid var(--mist); border-radius: 12px;
+      font-family: 'DM Sans', sans-serif; font-size: 15px;
+      background: white; color: var(--ink); outline: none; transition: border-color .2s;
+    }
+    .search-wrap input:focus { border-color: var(--gold); }
+    .search-wrap input::placeholder { color: #aaa; }
+    .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); font-size: 17px; opacity: .35; }
+
+    .ph-box {
+      background: var(--ink); color: var(--cream);
+      border-radius: 14px; padding: 24px 28px; margin-bottom: 40px;
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(190px,1fr)); gap: 10px 20px;
+    }
+    .ph-title { grid-column: 1/-1; font-family: 'Playfair Display', serif; font-size: 14px; color: var(--gold); font-style: italic; margin-bottom: 6px; }
+    .ph-item { font-size: 12.5px; display: flex; gap: 8px; }
+    .ph-key { color: var(--gold); font-weight: 500; min-width: 26px; }
+    .ph-val { color: rgba(250,248,243,.6); }
+
+    .section { margin-bottom: 44px; }
+    .sec-header { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+    .sec-icon { width: 38px; height: 38px; border-radius: 10px; background: var(--ink); color: var(--gold); display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; }
+    .sec-title { font-family: 'Playfair Display', serif; font-size: 19px; font-weight: 700; }
+    .sec-sub { font-size: 12px; color: #999; font-weight: 300; }
+    .sec-line { flex: 1; height: 1px; background: var(--mist); }
+
+    .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px,1fr)); gap: 13px; }
+    .card {
+      background: white; border-radius: 13px; padding: 18px;
+      border: 1.5px solid var(--mist); position: relative; cursor: pointer;
+      transition: transform .18s, box-shadow .18s, border-color .18s; overflow: hidden;
+    }
+    .card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--gold); opacity: 0; transition: opacity .2s; }
+    .card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(26,26,46,.07); border-color: transparent; }
+    .card:hover::before { opacity: 1; }
+    .card.playing::before { opacity: 1; background: var(--sage); }
+    .card-geo { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+    .card-ph { font-size: 12px; color: var(--rust); font-style: italic; margin-bottom: 10px; }
+    .card-fr { font-size: 14px; font-weight: 500; color: #444; border-top: 1px solid var(--mist); padding-top: 9px; }
+    .card-fr-label { font-size: 9.5px; text-transform: uppercase; letter-spacing: 1.8px; color: #ccc; margin-bottom: 2px; }
+    .play-btn {
+      position: absolute; top: 14px; right: 14px;
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--cream); border: 1.5px solid var(--mist);
+      font-size: 12px; display: flex; align-items: center; justify-content: center;
+      transition: background .2s, border-color .2s; color: var(--ink);
+    }
+    .card:hover .play-btn { background: var(--gold); border-color: var(--gold); color: white; }
+    .card.playing .play-btn { background: var(--sage); border-color: var(--sage); color: white; }
+    .card.has-audio .play-btn::after { content: ''; position: absolute; bottom: 6px; right: 6px; width: 6px; height: 6px; border-radius: 50%; background: var(--sage); }
+
+    .no-results { text-align: center; padding: 48px 0; color: #bbb; display: none; }
+    .no-results.on { display: block; }
+    .no-results span { font-size: 34px; display: block; margin-bottom: 10px; }
+
+    footer { text-align: center; padding: 28px; font-size: 11px; color: #ccc; border-top: 1px solid var(--mist); }
+
+    @media(max-width:600px) { .hero { padding: 36px 16px 32px; } .cards { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+<div class="hero">
+  <a href="admin.html" class="hero-admin-link">⚙ Gérer les mots</a>
+  <div class="hero-badges">
+    <span class="badge-flag">🇬🇪</span>
+    <span class="badge-arrow">→</span>
+    <span class="badge-flag">🇫🇷</span>
+  </div>
+  <p class="hero-eyebrow">Guide de conversation</p>
+  <h1>Le Géorgien pour<br><em>les Francophones</em></h1>
+  <p class="hero-sub">Cliquez sur ▶ pour entendre chaque mot</p>
+</div>
+
+<div class="container">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="q" placeholder="Rechercher en français, géorgien ou phonétique…" oninput="render()">
+  </div>
+
+  <div class="ph-box">
+    <div class="ph-title">📖 Clés de prononciation</div>
+    <div class="ph-item"><span class="ph-key">kh</span><span class="ph-val">« j » espagnol (jota)</span></div>
+    <div class="ph-item"><span class="ph-key">gh</span><span class="ph-val">« r » grasseyé parisien</span></div>
+    <div class="ph-item"><span class="ph-key">ts</span><span class="ph-val">« ts » de « tsar »</span></div>
+    <div class="ph-item"><span class="ph-key">tch</span><span class="ph-val">« ch » dans « chat »</span></div>
+    <div class="ph-item"><span class="ph-key">j</span><span class="ph-val">« dj » de « djinn »</span></div>
+    <div class="ph-item"><span class="ph-key">q</span><span class="ph-val">occlusive gutturale profonde</span></div>
+  </div>
+
+  <div id="sections"></div>
+  <div class="no-results" id="none"><span>🔎</span>Aucun résultat. Essayez un autre mot.</div>
+</div>
+
+<footer>Guide de conversation géorgien pour francophones &copy; 2026</footer>
+
+<script src="data.js"></script>
+<script>
+function playWord(geo, audioFile, cardEl) {
+  cardEl.classList.add('playing');
+  setTimeout(() => cardEl.classList.remove('playing'), 2000);
+  if (audioFile) {
+    const a = new Audio('audio/' + audioFile);
+    a.play().catch(() => speakTTS(geo));
+  } else {
+    speakTTS(geo);
+  }
+}
+function speakTTS(text) {
+  if (!window.speechSynthesis) return;
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'ka-GE'; u.rate = 0.85;
+  speechSynthesis.cancel(); speechSynthesis.speak(u);
+}
+
+function makeCard(w) {
+  const d = document.createElement('div');
+  d.className = 'card' + (w.audio ? ' has-audio' : '');
+  d.dataset.geo = w.geo.toLowerCase();
+  d.dataset.ph  = w.ph.toLowerCase();
+  d.dataset.fr  = w.fr.toLowerCase();
+  d.innerHTML = `
+    <button class="play-btn" title="Écouter">▶</button>
+    <div class="card-geo">${w.geo}</div>
+    <div class="card-ph">${w.ph}</div>
+    <div class="card-fr-label">Français</div>
+    <div class="card-fr">${w.fr}</div>`;
+  d.onclick = () => playWord(w.geo, w.audio, d);
+  return d;
+}
+
+function render() {
+  const q = document.getElementById('q').value.toLowerCase().trim();
+  const root = document.getElementById('sections');
+  root.innerHTML = '';
+  let total = 0;
+
+  for (const [title, section] of Object.entries(VOCABULARY)) {
+    const words = section.words.filter(w =>
+      !q || w.geo.toLowerCase().includes(q) || w.ph.toLowerCase().includes(q) || w.fr.toLowerCase().includes(q)
+    );
+    if (!words.length) continue;
+    total += words.length;
+
+    const sec = document.createElement('div'); sec.className = 'section';
+    sec.innerHTML = `
+      <div class="sec-header">
+        <div class="sec-icon">${section.icon}</div>
+        <div><div class="sec-title">${title}</div><div class="sec-sub">${words.length} mot${words.length>1?'s':''}</div></div>
+        <div class="sec-line"></div>
+      </div>
+      <div class="cards"></div>`;
+    const grid = sec.querySelector('.cards');
+    words.forEach(w => grid.appendChild(makeCard(w)));
+    root.appendChild(sec);
+  }
+  document.getElementById('none').classList.toggle('on', total === 0);
+}
+
+render();
+</script>
+</body>
+</html>
