@@ -156,6 +156,11 @@ const VOCABULARY = {
       { geo: "ვარდისფერი", ph: "Vardissperi", fr: "Rose", audio: "ვარდისფერი.mp3" },
       { geo: "ყავისფერი", ph: "Kavissperi", fr: "Marron / Brun", audio: "ყავისფერი.mp3" },
       { geo: "ცისფერი", ph: "Tsissperi", fr: "Bleu ciel", audio: "ცისფერი.mp3" },
+      { geo: "წითელი", ph: "Tsiteli", fr: "Rouge", audio: "წითელი.mp3" },
+      { geo: "მწვანე", ph: "Mtsvane", fr: "Vert / Verte", audio: "მწვანე.mp3" },
+      { geo: "ყვითელი", ph: "Kviteli", fr: "Jaune", audio: "ყვითელი.mp3" }, 
+      { geo: "ნარინჯისფერი", ph: "Narindjissperi", fr: "Orange", audio: "ნარინჯისფერი.mp3" },
+      { geo: "იასამნისფერი", ph: "Iassamnisperi", fr: "Violet / Violette", audio: "იასამნისფერი.mp3" }
     ]
   },
 
