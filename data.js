@@ -65,6 +65,69 @@ const VOCABULARY = {
       { geo: "მუხლი", ph: "Muxli", fr: "Genou", audio: "მუხლი.mp3" },
       { geo: "ფრჩხილი", ph: "Frchxili", fr: "Ongle", audio: "ფრჩხილი.mp3" },
     ]
+  },
+
+  // ──────────────────────────────────────────────────
+  //  Les Animaux
+  // ──────────────────────────────────────────────────
+  "Les Animaux": {
+    icon: "🐾",
+    words: [
+      { geo: "კატა", ph: "Kata", fr: "Chat", audio: "კატა.mp3" },
+      { geo: "დათვი", ph: "Datvi", fr: "Ours", audio: "დათვი.mp3" },
+      { geo: "მელა", ph: "Mela", fr: "Renard", audio: "მელა.mp3" },
+      { geo: "მგელი", ph: "Mgeli", fr: "Loup", audio: "მგელი.mp3" },
+      { geo: "ვირი", ph: "Viri", fr: "Âne", audio: "ვირი.mp3" },
+      { geo: "ვეფხვი", ph: "Vepxvi", fr: "Tigre", audio: "ვეფხვი.mp3" },
+      { geo: "თხა", ph: "Txa", fr: "Chèvre", audio: "თხა.mp3" },
+      { geo: "ირემი", ph: "Iremi", fr: "Cerf", audio: "ირემი.mp3" },
+      { geo: "ლომი", ph: "Lomi", fr: "Lion", audio: "ლომი.mp3" },
+      { geo: "სპილო", ph: "Spilo", fr: "Éléphant", audio: "სპილო.mp3" },
+      { geo: "აქლემი", ph: "Aqlemi", fr: "Chameau", audio: "აქლემი.mp3" },
+      { geo: "კურდღელი", ph: "Kurdgeli", fr: "Lapin", audio: "კურდღელი.mp3" },
+      { geo: "თევზი", ph: "Tevzi", fr: "Poisson", audio: "თევზი.mp3" },
+      { geo: "მაიმუნი", ph: "Maïmouni", fr: "Singe", audio: "მაიმუნი.mp3" },
+      { geo: "მტრედი", ph: "Mtredi", fr: "Pigeon", audio: "მტრედი.mp3" },
+      { geo: "ტურა", ph: "Tura", fr: "Chacal", audio: "ტურა.mp3" },
+      { geo: "ცხენი", ph: "Cxeni", fr: "Cheval", audio: "ცხენი.mp3" },
+    ]
+  },
+
+  // ──────────────────────────────────────────────────
+  //  Les 12 Mois de l'Année
+  // ──────────────────────────────────────────────────
+  "Les 12 Mois de l'Année": {
+    icon: "⛅",
+    words: [
+      { geo: "იანვარი", ph: "Ianvari", fr: "Janvier", audio: "იანვარი.mp3" },
+      { geo: "თებერვალი", ph: "Tebervali", fr: "Février", audio: "თებერვალი.mp3" },
+      { geo: "მარტი", ph: "Marti", fr: "Mars", audio: "მარტი.mp3" },
+      { geo: "აპრილი", ph: "Aprili", fr: "Avril", audio: "აპრელი.mp3" },
+      { geo: "მაისი", ph: "Maïssi", fr: "Mai", audio: "მაისი.mp3" },
+      { geo: "ივნისი", ph: "Ivnissi", fr: "Juin", audio: "ივნისი.mp3" },
+      { geo: "ივლისი", ph: "Ivlissi", fr: "Juillet", audio: "ივლისი.mp3" },
+      { geo: "აგვისტო", ph: "Agvisto", fr: "Août", audio: "აგვისტო.mp3" },
+      { geo: "სექტემბერი", ph: "Seqtemberi", fr: "Septembre", audio: "სექტემბერი.mp3" },
+      { geo: "ოქტომბერი", ph: "Oqtomberi", fr: "Octobre", audio: "ოქტომბერი.mp3" },
+      { geo: "ნოემბერი", ph: "Noemberi", fr: "Novembre", audio: "ნოემბერი.mp3" },
+      { geo: "დეკემბერი", ph: "Dekemberi", fr: "Décembre", audio: "დეკემბერი.mp3" },
+    ]
+  },
+
+  // ──────────────────────────────────────────────────
+  //  Les Jours de la Semaine
+  // ──────────────────────────────────────────────────
+  "Les Jours de la Semaine": {
+    icon: "📆",
+    words: [
+      { geo: "ორშაბათი", ph: "Orshabati", fr: "Lundi", audio: "ორშაბათი.mp3" },
+      { geo: "სამშაბათი", ph: "Samshabati", fr: "Mardi", audio: "სამშაბათი.mp3" },
+      { geo: "ოთხშაბათი", ph: "Otxshabati", fr: "Mercredi", audio: "ოთხშაბათი.mp3" },
+      { geo: "ხუთშაბათი", ph: "Xutshabati", fr: "Jeudi", audio: "ხუთშაბათი.mp3" },
+      { geo: "პარასკევი", ph: "Paraskevi", fr: "Vendredi", audio: "პარასკევი.mp3" },
+      { geo: "შაბათი", ph: "Shabati", fr: "Samedi", audio: "შაბათი.mp3" },
+      { geo: "კვირა", ph: "Kvira", fr: "Dimanche", audio: "კვირა.mp3" },
+    ]
   }
 
 };
